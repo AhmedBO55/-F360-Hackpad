@@ -1,15 +1,10 @@
-# You import all the IOs of your board
 import board
 import busio
-
-# These are imports from the kmk library
 from kmk.kmk_keyboard import KMKKeyboard
 from kmk.scanners.keypad import MatrixScanner
 from kmk.keys import KC
 from kmk.modules.layers import Layers
 from kmk.modules.macros import Press, Release, Tap, Macros
-
-# OLED Display imports
 from kmk.extensions.display import Display, TextEntry
 from kmk.extensions.display.ssd1306 import SSD1306
 
@@ -63,13 +58,16 @@ keyboard.matrix = MatrixScanner(
     columns_to_anodes=False,
 )
 
-# Fusion 360 keymap
-# Layout:
-# [ESC] [L]   [C]   [E]
-# [R]   [O]   [M]   [P]
-# [S]   [T]   [F]   [X]
-# [D]   [UNDO][REDO][SAVE]
+# Define layers
+# Layer 0: Fusion 360 shortcuts
+# Layer 1: Numbers and symbols (activated by holding bottom-right key)
 keyboard.keymap = [
+    # LAYER 0 - Fusion 360 shortcuts
+    # Layout:
+    # [ESC] [L]   [C]   [E]
+    # [R]   [O]   [M]   [P]
+    # [S]   [T]   [F]   [X]
+    # [D]   [UNDO][REDO][LAYER]
     [
         # ROW 0 (connected to TX)
         KC.ESC,   KC.L,     KC.C,     KC.E,        # Escape, Line, Circle, Extrude
@@ -78,8 +76,25 @@ keyboard.keymap = [
         # ROW 2 (connected to D2)
         KC.S,     KC.T,     KC.F,     KC.X,        # Sketch, Trim, Fillet, Construction
         # ROW 3 (connected to D3)
-        KC.D,     KC.LCTL(KC.Z), KC.LCTL(KC.Y), KC.LCTL(KC.S),  # Dimension, Undo, Redo, Save
-    ]
+        KC.D,     KC.LCTL(KC.Z), KC.LCTL(KC.Y), KC.MO(1),  # Dimension, Undo, Redo, Hold for Layer 1
+    ],
+    
+    # LAYER 1 - Numbers and symbols
+    # Layout:
+    # [1]   [2]   [3]   [+]
+    # [4]   [5]   [6]   [-]
+    # [7]   [8]   [9]   [*]
+    # [0]   [.]   [ENT] [LAYER]
+    [
+        # ROW 0
+        KC.N1,    KC.N2,    KC.N3,    KC.PLUS,     # 1, 2, 3, +
+        # ROW 1
+        KC.N4,    KC.N5,    KC.N6,    KC.MINS,     # 4, 5, 6, -
+        # ROW 2
+        KC.N7,    KC.N8,    KC.N9,    KC.ASTR,     # 7, 8, 9, *
+        # ROW 3
+        KC.N0,    KC.DOT,   KC.ENT,   KC.TRNS,     # 0, ., Enter, (transparent - exits layer)
+    ],
 ]
 
 # Start kmk!
